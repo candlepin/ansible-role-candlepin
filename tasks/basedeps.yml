@@ -1,11 +1,4 @@
 ---
-- name: Disable SELINUX
-  selinux:
-    state: disabled
-  tags:
-    - candlepin-basedeps
-    - candlepin
-
 - name: Enable EPEL
   package:
     name: epel-release

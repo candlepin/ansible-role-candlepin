@@ -1,4 +1,11 @@
 ---
+- name: Disable SELINUX
+  selinux:
+    state: disabled
+  tags:
+    - candlepin
+    - candlepin-root
+
 - name: Enable & Start the haveged entropy service
   service:
     name: haveged
