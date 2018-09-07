@@ -17,6 +17,7 @@
     - git
     - haveged
     - java-1.8.0-openjdk-devel
+    - jss
     - libxml2-python
     - liquibase
     - make
