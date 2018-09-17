@@ -21,6 +21,7 @@
     - libxml2-python
     - liquibase
     - make
+    - policycoreutils-devel
     - postgresql
     - postgresql-jdbc
     - postgresql-server
