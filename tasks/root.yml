@@ -87,6 +87,7 @@
     - 8443
     - 8080
     - 5005
+    - 8161
   when: firewalld_status.rc == 0
   tags:
     - candlepin
