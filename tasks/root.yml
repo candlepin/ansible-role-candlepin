@@ -93,22 +93,6 @@
     - candlepin
     - candlepin-root
 
-- name: Gem refreshing
-  command: gem update --system
-  tags:
-    - candlepin
-    - candlepin-root
-
-- name: Install gem dependencies
-  gem:
-    name: "{{item}}"
-    user_install: False
-  with_items:
-    - json_pure
-  tags:
-    - candlepin
-    - candlepin-root
-
 - name: Create postgresql user
   postgresql_user:
     name: candlepin

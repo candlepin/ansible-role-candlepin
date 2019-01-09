@@ -33,6 +33,7 @@
     - ruby-devel
     - rubygem-bundler
     - rubygem-qpid_proton
+    - rubygem-json_pure
     - rubygems
     - tomcat
     - wget
