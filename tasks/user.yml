@@ -49,16 +49,7 @@
     - candlepin
     - candlepin-user
 
-- name: Perform a clean build of the source tree
-  command: ~/bin/buildr clean test=no package
-  args:
-    chdir: "{{candlepin_checkout}}"
-    creates: "{{candlepin_checkout}}/server/target/*.zip"
-  tags:
-    - candlepin
-    - candlepin-user
-
-- name: Deploy the candlepin server
+- name: Build & Deploy the candlepin server
   shell: "./server/bin/deploy {{candlepin_deploy_args}}"
   args:
     chdir: "{{candlepin_checkout}}"
