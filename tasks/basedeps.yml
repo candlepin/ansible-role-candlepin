@@ -39,6 +39,10 @@
     - wget
     - zlib
     - zlib-devel
+    - createrepo
+    - rpm-build
+    - rpm-sign
+    - python-requests
   tags:
     - candlepin-basedeps
     - candlepin
