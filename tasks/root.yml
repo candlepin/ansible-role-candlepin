@@ -53,11 +53,13 @@
   set_fact:
     host_address: "{{hostvars['dev']['ansible_default_ipv4']['gateway']}}"
     net_address_and_mask: "{{hostvars['dev']['ansible_default_ipv4']['gateway']}}/{{hostvars['dev']['ansible_default_ipv4']['netmask']}}"
+  when: hostvars['dev'] is defined
 
 - name: Set postgresql to trust connections from VM host
   lineinfile:
     dest: /var/lib/pgsql/data/pg_hba.conf
     line: "host    all         all         {{host_address}}/{{net_address_and_mask | ipaddr('prefix')}}           trust"
+  when: hostvars['dev'] is defined
   tags:
     - candlepin
     - candlepin-root
