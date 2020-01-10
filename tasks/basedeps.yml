@@ -37,7 +37,7 @@
       - wget
       - zlib
       - zlib-devel
-      - createrepo
+      - createrepo_c
       - rpm-build
       - rpm-sign
       - python-requests
