@@ -8,6 +8,14 @@
     - candlepin-basedeps
     - candlepin
 
+- name: Setting up postgresql repository
+  yum:
+    name: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+    state: present
+
+- name: Enable postgresql
+  command: yum-config-manager --enable pgdg12
+
 - name: Install base packages
   package:
     name:
@@ -20,9 +28,9 @@
       - liquibase
       - make
       - policycoreutils-devel
-      - postgresql
       - postgresql-jdbc
-      - postgresql-server
+      - postgresql12
+      - postgresql12-server
       - python-psycopg2
       - python-pip
       - qpid-proton-c
