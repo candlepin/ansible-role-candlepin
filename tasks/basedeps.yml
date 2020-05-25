@@ -49,6 +49,7 @@
       - rpm-build
       - rpm-sign
       - python-requests
+      - expect
     state: present
   tags:
     - candlepin-basedeps
