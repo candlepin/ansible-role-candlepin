@@ -1,0 +1,29 @@
+---
+- name: Converge
+  hosts: all
+
+  pre_tasks:
+    # - name: setup basedep repo
+    #   yum_repository:
+    #     name: base
+    #     description: CentOS-7 - Base
+    #     baseurl: http://mirror.centos.org/centos/7/os/$basearch/
+    #     file: CentOS-Base
+    #     gpgcheck: no
+
+    - name: Install test deps
+      package:
+        name:
+          - sudo
+          - python3
+          - python3-devel
+          - iproute
+          
+
+  roles:
+    - role: ansible-role-candlepin
+  
+  # tasks:
+  #   - name: "Include ansible-role-candlepin"
+  #     include_role:
+  #       name: "ansible-role-candlepin"

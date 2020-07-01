@@ -35,13 +35,13 @@
     - candlepin-basedeps
     - candlepin
 
-- name: Enable postgresql repo
-  yum_repository:
-    name: pgdg12
-    enabled: yes
-  tags:
-    - candlepin-basedeps
-    - candlepin
+# - name: Enable postgresql repo
+#   yum_repository:
+#     name: pgdg12
+#     enabled: yes
+#   tags:
+#     - candlepin-basedeps
+#     - candlepin
 
 - name: Install base packages
   package:
