@@ -22,7 +22,6 @@
       - gcc
       - git
       - haveged
-      - java-1.8.0-openjdk-devel
       - jss
       - libxml2-python
       - liquibase
@@ -50,6 +49,7 @@
       - rpm-sign
       - python-requests
       - expect
+      - java-11-openjdk-devel
     state: present
   tags:
     - candlepin-basedeps
