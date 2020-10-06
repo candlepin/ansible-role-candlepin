@@ -63,3 +63,6 @@
     - candlepin-basedeps
     - candlepin
     - system_update
+
+- name: Set Java-11 as default
+  command: update-alternatives --set java /usr/lib/jvm/java-11-openjdk-11.0.8.10-0.el7_8.x86_64/bin/java

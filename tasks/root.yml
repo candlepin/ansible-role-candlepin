@@ -23,6 +23,14 @@
     - candlepin
     - candlepin-root
 
+- name: Use java-11 as default implementation 
+  lineinfile:
+    dest: /etc/tomcat/tomcat.conf
+    line: "JAVA_HOME=\"/usr/lib/jvm/jre-11\""
+  tags:
+    - candlepin
+    - candlepin-root
+
 - name: Initiate database
   command: /usr/pgsql-12/bin/postgresql-12-setup initdb
   args:
