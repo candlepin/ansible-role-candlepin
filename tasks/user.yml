@@ -50,7 +50,7 @@
     - candlepin-user
 
 - name: Build & Deploy the candlepin server
-  shell: "./server/bin/deploy {{candlepin_deploy_args}}"
+  shell: "./bin/deployment/deploy {{candlepin_deploy_args}}"
   args:
     chdir: "{{candlepin_checkout}}"
     # moving to another task

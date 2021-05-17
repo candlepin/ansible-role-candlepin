@@ -3,6 +3,8 @@ ansible-role-candlepin
 
 An Ansible role that installs and deploys candlepin for development purposes.
 
+Ansible role only works with Candlepin main branch, and you would have to manually switch branch & re-configure/run Candlepin as needed for older branches.
+
 Requirements
 ------------
 
@@ -75,4 +77,5 @@ GPLv2
 Author Information
 ------------------
 
-See candlepinproject.org
+See [official documentation](http://www.candlepinproject.org).
+
