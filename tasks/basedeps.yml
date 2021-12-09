@@ -17,10 +17,17 @@
     - candlepin
     - system_update
 
-- name: Setting up postgresql repository
+- name: Setting up postgresql repository el7
   yum:
     name: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
     state: present
+  when: hostvars[inventory_hostname].ansible_distribution_major_version == 7
+
+- name: Setting up postgresql repository el8
+  yum:
+    name: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+    state: present
+  when: hostvars[inventory_hostname].ansible_distribution_major_version == 8
 
 - name: Enable postgresql
   command: yum-config-manager --enable pgdg12
