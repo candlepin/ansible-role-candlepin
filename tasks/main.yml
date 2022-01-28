@@ -1,27 +1,30 @@
 ---
-- include: basedeps.yml
-  become: true
-  when: candlepin_basedeps
-  tags:
-    - candlepin
-    - candlepin-basedeps
+- import_tasks: el7/el7_tasks.yml
+  when:
+    - ansible_distribution == 'CentOS'
+    - ansible_distribution_major_version == '7'
 
-- include: yorkit.yml
-  when: setup_yourkit is defined
-  become: true
-  tags:
-    - candlepin
-    - yorkit-setup
+- import_tasks: el8/el8_tasks.yml
+  when:
+    - ansible_distribution == 'CentOS'
+    - ansible_distribution_major_version == '8'
 
-- include: root.yml
-  become: true
-  tags:
-    - candlepin
-    - candlepin-root
+- import_tasks: common/cp_debugging.yml
+  when:
+    - cp_configure_debugging | bool
 
-- include: user.yml
-  become: yes
-  become_user: "{{ candlepin_user }}"
-  tags:
-    - candlepin
-    - candlepin-user
+- import_tasks: common/cp_setup.yml
+  become: true
+  become_user: "{{candlepin_user}}"
+
+- import_tasks: common/cp_deploy.yml
+  become: true
+  become_user: "{{candlepin_user}}"
+  when:
+    - cp_deploy | bool
+
+- import_tasks: common/user_env.yml
+  become: true
+  become_user: "{{candlepin_user}}"
+  when:
+    - cp_configure_user_env | bool

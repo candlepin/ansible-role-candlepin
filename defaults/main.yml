@@ -1,14 +1,23 @@
 ---
-candlepin_basedeps: True
-
-candlepin_git_pull: True
-
 candlepin_user: candlepin
-candlepin_user_home:  /home/candlepin
+candlepin_user_home: "/home/{{ candlepin_user }}"
+candlepin_home: "{{ candlepin_user_home }}/devel/candlepin"
 
-candlepin_git_repo: https://github.com/candlepin/candlepin.git
-candlepin_checkout: "{{candlepin_user_home}}/candlepin"
+cp_configure_postgresql: true
+cp_configure_mariadb: true
+cp_configure_user_env: false
+cp_configure_debugging: false
 
-candlepin_deploy_args: "-g -a"
+cp_git_checkout: true
+cp_git_repo: "https://github.com/candlepin/candlepin"
+cp_git_ref: master
 
-yourkit_agent_port: 35675
+cp_deploy: true
+cp_deploy_args: '-gta'
+
+cp_yourkit_library: "/opt/yjp/bin/linux-x86-64/libyjpagent.so"
+cp_yourkit_agent_port: 35675
+
+rvm1_rubies: ['ruby-2.4']
+rvm1_user: "{{ candlepin_user }}"
+rvm1_bundler_install: true

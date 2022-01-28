@@ -1,0 +1,93 @@
+---
+- name: "Install MariaDB packages"
+  become: true
+  package:
+    name:
+      - mariadb
+      - mariadb-server
+      - mysql-connector-java
+      - python-PyMySQL
+    state: present
+  tags:
+    - candlepin
+    - mariadb
+
+- name: "Set Candlepin-specific MySQL configuration (collation-server)"
+  become: true
+  ini_file:
+    path: /etc/my.cnf.d/candlepin.cnf
+    mode: '0644'
+    section: mysqld
+    option: collation-server
+    value: utf8_general_ci
+    create: true
+  tags:
+    - candlepin
+    - mariadb
+
+- name: "Set Candlepin-specific MySQL configuration (character-set-server)"
+  become: true
+  ini_file:
+    path: /etc/my.cnf.d/candlepin.cnf
+    mode: '0644'
+    section: mysqld
+    option: character-set-server
+    value: utf8
+    create: true
+  tags:
+    - candlepin
+    - mariadb
+
+- name: "Set Candlepin-specific MySQL configuration (transaction-isolation)"
+  become: true
+  ini_file:
+    path: /etc/my.cnf.d/candlepin.cnf
+    mode: '0644'
+    section: mysqld
+    option: transaction-isolation
+    value: READ-COMMITTED
+    create: true
+  tags:
+    - candlepin
+    - mariadb
+
+- name: "Set Candlepin-specific MySQL configuration (default-time-zone)"
+  become: true
+  ini_file:
+    path: /etc/my.cnf.d/server.cnf
+    section: server
+    option: default-time-zone
+    value: "+00:00"
+    create: no
+  tags:
+    - candlepin
+    - mariadb
+
+- name: "Enable and start the MariaDB service"
+  become: true
+  service:
+    name: mariadb.service
+    enabled: true
+    state: started
+  tags:
+    - candlepin
+    - mariadb
+
+- name: "Create the 'candlepin' MariaDB user"
+  become: true
+  mysql_user:
+    name: candlepin
+    priv: "candlepin.*:ALL,GRANT"
+    state: present
+  tags:
+    - candlepin
+    - mariadb
+
+- name: "Create the 'candlepin' MariaDB database"
+  mysql_db:
+    login_user: candlepin
+    name: candlepin
+    state: present
+  tags:
+    - candlepin
+    - mariadb

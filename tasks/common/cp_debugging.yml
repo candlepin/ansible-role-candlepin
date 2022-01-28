@@ -1,0 +1,80 @@
+---
+- name: "Configure Tomcat for remote debugging"
+  block:
+    - name: "Create remote debugging configuration file for Tomcat"
+      become: true
+      blockinfile:
+        path: "/etc/tomcat/conf.d/cp_remote_debugging.conf"
+        block: |
+          CATALINA_OPTS="${CATALINA_OPTS} -Xdebug -Xrunjdwp:transport=dt_socket,address=*:8000,server=y,suspend=n"
+        state: present
+        create: true
+        mode: 0755
+        group: tomcat
+      tags:
+        - candlepin
+        - debugging
+
+    - name: "Enable Tomcat debugging port in firewalld"
+      become: true
+      firewalld:
+        port: "8000/tcp"
+        state: enabled
+        permanent: true
+        offline: false
+      tags:
+        - system
+        - candlepin
+        - debugging
+
+- name: "Set up Java profiling via YourKit"
+  block:
+    - name: "Create directory for YourKit profiling library"
+      become: true
+      file:
+        path: "{{cp_yourkit_guest_home}}"
+        state: directory
+        mode: 0755
+        recurse: true
+      tags:
+        - candlepin
+        - debugging
+
+    - name: "Copy YourKit library file(s) from host"
+      become: true
+      copy:
+        src: "{{cp_yourkit_library}}"
+        dest: "{{cp_yourkit_guest_library}}"
+        mode: 0755
+      tags:
+        - candlepin
+        - debugging
+
+    - name: "Create YourKit profiling configuration file for Tomcat"
+      become: true
+      blockinfile:
+        path: "/etc/tomcat/conf.d/cp_yourkit_profiling.conf"
+        block: |
+          export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/opt/yjp/bin/linux-x86-64"
+          CATALINA_OPTS="${CATALINA_OPTS} -agentlib:yjpagent=port={{cp_yourkit_agent_port}}"
+        state: present
+        create: true
+        mode: 0755
+        group: tomcat
+      tags:
+        - candlepin
+        - debugging
+
+    - name: "Enable YourKit ports in firewalld"
+      become: true
+      firewalld:
+        port: "{{cp_yourkit_agent_port}}/tcp"
+        state: enabled
+        permanent: true
+        offline: false
+      tags:
+        - system
+        - candlepin
+        - debugging
+  when:
+    - cp_yourkit_library is file
