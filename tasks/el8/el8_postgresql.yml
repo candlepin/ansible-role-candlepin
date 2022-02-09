@@ -2,7 +2,7 @@
 - name: "Enable PostgreSQL DNF modules"
   become: true
   command:
-    cmd: dnf module -y enable postgresql
+    cmd: dnf module -y enable postgresql:12
     warn: false
   tags:
     - postgresql

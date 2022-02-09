@@ -1,10 +1,26 @@
 ---
+- name: "Set up repository that includes PostgreSQL 12"
+  become: true
+  yum:
+    name: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+    state: present
+  tags:
+    - postgresql
+    - candlepin
+
+- name: "Enable PostgreSQL 12 repository"
+  become: true
+  command: yum-config-manager --enable pgdg12
+  tags:
+    - postgresql
+    - candlepin
+
 - name: "Install PostgreSQL packages"
   become: true
   package:
     name:
-      - postgresql-server
-      - postgresql
+      - postgresql12-server
+      - postgresql12
       - postgresql-jdbc
       - python-psycopg2
     state: present
@@ -15,8 +31,8 @@
 - name: "Initialize PostgreSQL database"
   become: true
   command:
-    cmd: postgresql-setup initdb
-    creates: "/var/lib/pgsql/data/PG_VERSION"
+    cmd: postgresql-12-setup initdb
+    creates: "/var/lib/pgsql/12/data/PG_VERSION"
     warn: false
   tags:
     - postgresql
@@ -25,7 +41,7 @@
 - name: "Configure PostgreSQL to trust local connections (1 of 3)"
   become: true
   postgresql_pg_hba:
-    dest: /var/lib/pgsql/data/pg_hba.conf
+    dest: /var/lib/pgsql/12/data/pg_hba.conf
     contype: local
     databases: all
     users: all
@@ -39,7 +55,7 @@
 - name: "Configure PostgreSQL to trust local connections (2 of 3)"
   become: true
   postgresql_pg_hba:
-    dest: /var/lib/pgsql/data/pg_hba.conf
+    dest: /var/lib/pgsql/12/data/pg_hba.conf
     contype: host
     databases: all
     users: all
@@ -54,7 +70,7 @@
 - name: "Configure PostgreSQL to trust local connections (3 of 3)"
   become: true
   postgresql_pg_hba:
-    dest: /var/lib/pgsql/data/pg_hba.conf
+    dest: /var/lib/pgsql/12/data/pg_hba.conf
     contype: host
     databases: all
     users: all
@@ -69,7 +85,7 @@
 - name: "Enable and start the PostgreSQL service"
   become: true
   service:
-    name: postgresql.service
+    name: postgresql-12.service
     enabled: true
     state: started
   tags:
