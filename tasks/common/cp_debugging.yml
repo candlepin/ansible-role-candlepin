@@ -76,5 +76,8 @@
         - system
         - candlepin
         - debugging
+  vars:
+    cp_yourkit_guest_home: "/opt/yjp/bin/linux-x86-64"
+    cp_yourkit_guest_library: "{{cp_yourkit_guest_home}}/libyjpagent.so"
   when:
     - cp_yourkit_library is file

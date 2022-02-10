@@ -29,31 +29,31 @@
     - candlepin
     - user_env
 
-- name: "Check for Vagrant Candlepin repo mapping"
-  stat:
-    path: "{{cp_vagrant_mapping}}"
-  register: cp_vagrant_mapping_file
-  tags:
-    - candlepin
-    - user_env
+- name: "Standardize location of Candlepin repo"
+  block:
+    - name: "Check for Vagrant Candlepin repo mapping"
+      stat:
+        path: "{{cp_vagrant_mapping}}"
+      register: cp_vagrant_mapping_file
 
-- name: "Create user-space devel directory"
-  file:
-    path: "{{candlepin_user_home}}/devel"
-    state: directory
-  when:
-    - cp_vagrant_mapping_file.stat.exists
-  tags:
-    - candlepin
-    - user_env
+    - name: "Create user-space devel directory"
+      file:
+        path: "{{candlepin_user_home}}/devel"
+        state: directory
+      when:
+        - cp_vagrant_mapping_file.stat.exists
 
-- name: "Create devel symlink to Vagrant-mapped repo"
-  file:
-    src: "{{cp_vagrant_mapping}}"
-    path: "{{candlepin_user_home}}/devel/candlepin"
-    state: link
+    - name: "Create devel symlink to Vagrant-mapped Candlepin repo"
+      file:
+        src: "{{cp_vagrant_mapping}}"
+        path: "{{candlepin_user_home}}/devel/candlepin"
+        state: link
+      when:
+        - cp_vagrant_mapping_file.stat.exists
+  vars:
+    cp_vagrant_mapping: "/vagrant"
   when:
-    - cp_vagrant_mapping_file.stat.exists
+    - candlepin_home != candlepin_user_home + "/devel/candlepin"
   tags:
     - candlepin
     - user_env
