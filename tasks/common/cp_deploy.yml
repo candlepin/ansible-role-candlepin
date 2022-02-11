@@ -31,6 +31,8 @@
         warn: false
       when:
         - candlepin_home_dir.stat.isdir
+  environment:
+    JAVA_HOME: "/usr/lib/jvm/java"
   vars:
     cp_deploy_script: "{{candlepin_home}}/bin/deployment/deploy"
   tags:

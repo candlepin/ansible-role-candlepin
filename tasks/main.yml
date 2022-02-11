@@ -1,4 +1,7 @@
 ---
+- name: "Gather system facts"
+  service_facts:
+
 - import_tasks: el7/el7_tasks.yml
   when:
     - ansible_distribution == 'CentOS'

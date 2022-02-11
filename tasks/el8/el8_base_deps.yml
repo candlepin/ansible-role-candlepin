@@ -99,6 +99,8 @@
     - 443
     - 8080    # Candlepin Tomcat server
     - 8443    # ^
+  when:
+    - "'firewalld.service' in ansible_facts.services"
   tags:
     - system
     - candlepin
