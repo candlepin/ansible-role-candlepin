@@ -17,7 +17,3 @@ cp_deploy_args: '-gta'
 
 cp_yourkit_library: "/opt/yjp/bin/linux-x86-64/libyjpagent.so"
 cp_yourkit_agent_port: 35675
-
-rvm1_rubies: ['ruby-2.4']
-rvm1_user: "{{ candlepin_user }}"
-rvm1_bundler_install: true

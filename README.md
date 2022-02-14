@@ -116,9 +116,6 @@ An example playbook for Vagrant use is as follows:
 ---
 - hosts: all
 
-  environment:
-    JAVA_HOME: /usr/lib/jvm/java
-
   roles:
     - role: candlepin
 
@@ -134,18 +131,11 @@ An example playbook for Vagrant use is as follows:
 
     cp_git_checkout: false
     cp_deploy: false
-
-    rvm1_rubies: ['ruby-2.4']
-    rvm1_user: "{{ candlepin_user }}"
-    rvm1_bundler_install: true
 ```
 
 The above playbook would provision the VM with PostgreSQL and MariaDB support, configure the user environment,
 and configure Tomcat for remote debugging and profiling. It would not check out the Candlepin repo, and,
 obviously, would not deploy it.
-
-Note that when using this role from Vagrant, the `rvm1_*` variables must be re-specified, even if unchanged,
-to ensure they are present when the rvm role is invoked.
 
 
 
