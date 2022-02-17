@@ -1,16 +1,27 @@
 ---
 - name: "Gather system facts"
   service_facts:
+    # intentionally left empty
+  tags:
+    - always
 
-- import_tasks: el7/el7_tasks.yml
+- name: "Include EL7 tasks"
+  include_tasks:
+    file: el7/el7_tasks.yml
   when:
-    - ansible_distribution == 'CentOS'
-    - ansible_distribution_major_version == '7'
+    - ansible_facts['distribution'] in ["CentOS", "RedHat"]
+    - ansible_facts['distribution_major_version'] == "7"
+  tags:
+    - always
 
-- import_tasks: el8/el8_tasks.yml
+- name: "Include EL8 tasks"
+  include_tasks:
+    file: el8/el8_tasks.yml
   when:
-    - ansible_distribution == 'CentOS'
-    - ansible_distribution_major_version == '8'
+    - ansible_facts['distribution'] in ["CentOS", "RedHat"]
+    - ansible_facts['distribution_major_version'] == "8"
+  tags:
+    - always
 
 - import_tasks: common/cp_debugging.yml
   when:
