@@ -23,6 +23,15 @@
   tags:
     - always
 
+- name: "Include F35+ tasks"
+  include_tasks:
+    file: f35/f35_tasks.yml
+  when:
+    - ansible_facts['distribution'] == "Fedora"
+    - ansible_facts['distribution_major_version'] >= "35"
+  tags:
+    - always
+
 - import_tasks: common/cp_debugging.yml
   when:
     - cp_configure_debugging | bool
