@@ -5,7 +5,7 @@
 - name: "Checkout Candlepin Repo"
   git:
     repo: "{{cp_git_repo}}"
-    refspec: "{{cp_git_ref}}"
+    version: "{{cp_git_ref}}"
     dest: "{{candlepin_home}}"
     force: true
     clone: true
