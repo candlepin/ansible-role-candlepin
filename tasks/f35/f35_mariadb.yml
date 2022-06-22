@@ -1,7 +1,7 @@
 ---
 - name: "Install MariaDB packages"
   become: true
-  package:
+  ansible.builtin.package:
     name:
       - mariadb
       - mariadb-server
@@ -14,7 +14,7 @@
 
 - name: "Set Candlepin-specific MySQL configuration (collation-server)"
   become: true
-  ini_file:
+  community.general.ini_file:
     path: /etc/my.cnf.d/candlepin.cnf
     mode: '0644'
     section: mysqld
@@ -27,7 +27,7 @@
 
 - name: "Set Candlepin-specific MySQL configuration (character-set-server)"
   become: true
-  ini_file:
+  community.general.ini_file:
     path: /etc/my.cnf.d/candlepin.cnf
     mode: '0644'
     section: mysqld
@@ -40,7 +40,7 @@
 
 - name: "Set Candlepin-specific MySQL configuration (transaction-isolation)"
   become: true
-  ini_file:
+  community.general.ini_file:
     path: /etc/my.cnf.d/candlepin.cnf
     mode: '0644'
     section: mysqld
@@ -53,7 +53,7 @@
 
 - name: "Set Candlepin-specific MySQL configuration (default-time-zone)"
   become: true
-  ini_file:
+  community.general.ini_file:
     path: /etc/my.cnf.d/mariadb-server.cnf
     section: server
     option: default-time-zone
@@ -65,7 +65,7 @@
 
 - name: "Enable and start the MariaDB service"
   become: true
-  service:
+  ansible.builtin.service:
     name: mariadb.service
     enabled: true
     state: started
@@ -101,13 +101,13 @@
 
 - name: "Create the 'candlepin' MariaDB user"
   become: true
-  command: "mysql --user root --execute=\"CREATE USER 'candlepin'@'localhost'; GRANT ALL PRIVILEGES on candlepin.* TO 'candlepin'@'localhost' WITH GRANT OPTION;\""
+  ansible.builtin.command: "mysql --user root --execute=\"CREATE USER 'candlepin'@'localhost'; GRANT ALL PRIVILEGES on candlepin.* TO 'candlepin'@'localhost' WITH GRANT OPTION;\""
   tags:
     - candlepin
     - mariadb
 
 - name: "Create the 'candlepin' MariaDB database"
-  mysql_db:
+  community.mysql.mysql_db:
     login_user: candlepin
     name: candlepin
     state: present

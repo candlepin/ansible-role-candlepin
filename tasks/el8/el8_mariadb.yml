@@ -1,7 +1,7 @@
 ---
 - name: "Enable MariaDB DNF modules"
   become: true
-  command:
+  ansible.builtin.command:
     cmd: dnf module -y enable mariadb
     warn: false
   tags:
@@ -10,7 +10,7 @@
 
 - name: "Install MariaDB packages"
   become: true
-  package:
+  ansible.builtin.package:
     name:
       - mariadb
       - mariadb-server
@@ -23,7 +23,7 @@
 
 - name: "Set Candlepin-specific MySQL configuration (collation-server)"
   become: true
-  ini_file:
+  community.general.ini_file:
     path: /etc/my.cnf.d/candlepin.cnf
     mode: '0644'
     section: mysqld
@@ -74,7 +74,7 @@
 
 - name: "Enable and start the MariaDB service"
   become: true
-  service:
+  ansible.builtin.service:
     name: mariadb.service
     enabled: true
     state: started
@@ -84,7 +84,7 @@
 
 - name: "Create the 'candlepin' MariaDB user"
   become: true
-  mysql_user:
+  community.mysql.mysql_user:
     name: candlepin
     priv: "candlepin.*:ALL,GRANT"
     state: present
@@ -93,7 +93,7 @@
     - mariadb
 
 - name: "Create the 'candlepin' MariaDB database"
-  mysql_db:
+  community.mysql.mysql_db:
     login_user: candlepin
     name: candlepin
     state: present

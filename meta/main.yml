@@ -3,7 +3,8 @@ galaxy_info:
   description: "Candlepin Entitlement Management"
   company: "Red Hat"
   license: license (GPLv2)
-  min_ansible_version: 2.3
+  min_ansible_version: '2.4'
+  role_name: candlepin
 
   # look into doing this
   # min_ansible_container_version:
@@ -18,8 +19,8 @@ galaxy_info:
   platforms:
     - name: EL
       versions:
-      - 7
-      - 8
+      - '7'
+      - '8'
     - name: Fedora
       versions:
       - all
@@ -34,3 +35,5 @@ dependencies:
         - 'ruby-2.4'
       rvm1_user: "{{ candlepin_user | default('candlepin') }}"
       rvm1_bundler_install: true
+    tags:
+      - molecule-idempotence-notest

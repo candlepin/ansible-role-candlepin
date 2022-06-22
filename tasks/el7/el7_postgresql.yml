@@ -1,7 +1,7 @@
 ---
 - name: "Set up repository that includes PostgreSQL 12"
   become: true
-  yum:
+  ansible.builtin.yum:
     name: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
     state: present
   tags:
@@ -10,14 +10,14 @@
 
 - name: "Enable PostgreSQL 12 repository"
   become: true
-  command: yum-config-manager --enable pgdg12
+  ansible.builtin.command: yum-config-manager --enable pgdg12
   tags:
     - postgresql
     - candlepin
 
 - name: "Install PostgreSQL packages"
   become: true
-  package:
+  ansible.builtin.package:
     name:
       - postgresql12-server
       - postgresql12
@@ -30,7 +30,7 @@
 
 - name: "Initialize PostgreSQL database"
   become: true
-  command:
+  ansible.builtin.command:
     cmd: postgresql-12-setup initdb
     creates: "/var/lib/pgsql/12/data/PG_VERSION"
     warn: false
@@ -40,7 +40,7 @@
 
 - name: "Configure PostgreSQL to trust local connections (1 of 3)"
   become: true
-  postgresql_pg_hba:
+  community.postgresql.postgresql_pg_hba:
     dest: /var/lib/pgsql/12/data/pg_hba.conf
     contype: local
     databases: all
@@ -54,7 +54,7 @@
 
 - name: "Configure PostgreSQL to trust local connections (2 of 3)"
   become: true
-  postgresql_pg_hba:
+  community.postgresql.postgresql_pg_hba:
     dest: /var/lib/pgsql/12/data/pg_hba.conf
     contype: host
     databases: all
@@ -69,7 +69,7 @@
 
 - name: "Configure PostgreSQL to trust local connections (3 of 3)"
   become: true
-  postgresql_pg_hba:
+  community.postgresql.postgresql_pg_hba:
     dest: /var/lib/pgsql/12/data/pg_hba.conf
     contype: host
     databases: all
@@ -84,7 +84,7 @@
 
 - name: "Enable and start the PostgreSQL service"
   become: true
-  service:
+  ansible.builtin.service:
     name: postgresql-12.service
     enabled: true
     state: started
@@ -93,7 +93,7 @@
     - candlepin
 
 - name: "Create the 'candlepin' PostgreSQL user"
-  postgresql_user:
+  community.postgresql.postgresql_user:
     name: candlepin
     password: candlepin
     role_attr_flags: CREATEDB
@@ -102,7 +102,7 @@
     - candlepin
 
 - name: "Create the 'candlepin' PostgreSQL database"
-  postgresql_db:
+  community.postgresql.postgresql_db:
     name: candlepin
     owner: candlepin
   tags:

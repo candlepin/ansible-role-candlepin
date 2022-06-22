@@ -1,21 +1,22 @@
 # These tasks must be run as the candlepin user. main.yml imports this file with become_user set to
-# {{candlepin_user}}, but if these are included or imported anywhere else, that will likely need to
+# {{ candlepin_user }}, but if these are included or imported anywhere else, that will likely need to
 # be done there as well.
 ---
 - name: "Add JAVA_HOME to .bashrc"
-  lineinfile:
-    path: "{{candlepin_user_home}}/.bashrc"
+  ansible.builtin.lineinfile:
+    path: "{{ candlepin_user_home }}/.bashrc"
     regexp: "^export JAVA_HOME="
     line: "export JAVA_HOME=/usr/lib/jvm/java"
     state: present
     create: true
+    mode: '0644'
   tags:
     - candlepin
     - user_env
 
 - name: "Set user prompt colors and features"
-  blockinfile:
-    path: "{{candlepin_user_home}}/.bash_profile"
+  ansible.builtin.blockinfile:
+    path: "{{ candlepin_user_home }}/.bash_profile"
     block: |
       parse_git_branch() {
         git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
@@ -27,6 +28,7 @@
       unset LS_COLORS
     state: present
     create: true
+    mode: "0644"
   tags:
     - candlepin
     - user_env
@@ -34,21 +36,22 @@
 - name: "Standardize location of Candlepin repo"
   block:
     - name: "Check for Vagrant Candlepin repo mapping"
-      stat:
-        path: "{{cp_vagrant_mapping}}"
+      ansible.builtin.stat:
+        path: "{{ cp_vagrant_mapping }}"
       register: cp_vagrant_mapping_file
 
     - name: "Create user-space devel directory"
-      file:
-        path: "{{candlepin_user_home}}/devel"
+      ansible.builtin.file:
+        path: "{{ candlepin_user_home }}/devel"
         state: directory
+        mode: "0755"
       when:
         - cp_vagrant_mapping_file.stat.exists
 
     - name: "Create devel symlink to Vagrant-mapped Candlepin repo"
-      file:
-        src: "{{cp_vagrant_mapping}}"
-        path: "{{candlepin_user_home}}/devel/candlepin"
+      ansible.builtin.file:
+        src: "{{ cp_vagrant_mapping }}"
+        path: "{{ candlepin_user_home }}/devel/candlepin"
         state: link
       when:
         - cp_vagrant_mapping_file.stat.exists

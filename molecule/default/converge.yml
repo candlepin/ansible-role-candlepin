@@ -1,0 +1,53 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    candlepin_user: "root"
+    candlepin_user_home: "/root/"
+    cp_configure_postgresql: false
+    cp_configure_mariadb: false
+    cp_configure_user_env: true
+    cp_configure_debugging: true
+    cp_git_checkout: true
+    cp_deploy: false
+    rvm1_install_flags: "--auto-dotfiles"
+    rvm1_install_path: "/usr/local/rvm"
+
+  tasks:
+    - name: Create initial user
+      ansible.builtin.user:
+        name: "candlepin"
+
+    - name: Install deps
+      ansible.builtin.package:
+        name:
+          - ca-certificates
+          - findutils
+          - procps-ng
+          - python3
+          - python3-libselinux
+          - selinux-policy
+          - which
+        state: present
+      when:
+        - ansible_distribution_major_version == '8' or ansible_distribution_major_version == '35'
+
+    - name: Install deps
+      ansible.builtin.package:
+        name:
+          - ca-certificates
+          - findutils
+          - procps-ng
+          - python3
+          - python3-libselinux
+          - libselinux-python
+          - selinux-policy
+          - which
+      when:
+        - ansible_distribution_major_version == '7'
+
+    - name: "Include ansible-role-candlepin"
+      ansible.builtin.include_role:
+        name: "ansible-role-candlepin"

@@ -3,7 +3,7 @@
   block:
     - name: "Create remote debugging configuration file for Tomcat"
       become: true
-      blockinfile:
+      ansible.builtin.blockinfile:
         path: "/etc/tomcat/conf.d/cp_remote_debugging.conf"
         block: |
           CATALINA_OPTS="${CATALINA_OPTS} -Xdebug -Xrunjdwp:transport=dt_socket,address=*:8000,server=y,suspend=n"
@@ -17,12 +17,13 @@
 
     - name: "Enable Tomcat debugging port in firewalld"
       become: true
-      firewalld:
+      ansible.posix.firewalld:
         port: "8000/tcp"
         state: enabled
         permanent: true
         offline: false
       when:
+        - "'services' in ansible_facts"
         - "'firewalld.service' in ansible_facts.services"
       tags:
         - system
@@ -33,8 +34,8 @@
   block:
     - name: "Create directory for YourKit profiling library"
       become: true
-      file:
-        path: "{{cp_yourkit_guest_home}}"
+      ansible.builtin.file:
+        path: "{{ cp_yourkit_guest_home }}"
         state: directory
         mode: 0755
         recurse: true
@@ -44,9 +45,9 @@
 
     - name: "Copy YourKit library file(s) from host"
       become: true
-      copy:
-        src: "{{cp_yourkit_library}}"
-        dest: "{{cp_yourkit_guest_library}}"
+      ansible.builtin.copy:
+        src: "{{ cp_yourkit_library }}"
+        dest: "{{ cp_yourkit_guest_library }}"
         mode: 0755
       tags:
         - candlepin
@@ -54,11 +55,11 @@
 
     - name: "Create YourKit profiling configuration file for Tomcat"
       become: true
-      blockinfile:
+      ansible.builtin.blockinfile:
         path: "/etc/tomcat/conf.d/cp_yourkit_profiling.conf"
         block: |
           export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/opt/yjp/bin/linux-x86-64"
-          CATALINA_OPTS="${CATALINA_OPTS} -agentlib:yjpagent=port={{cp_yourkit_agent_port}}"
+          CATALINA_OPTS="${CATALINA_OPTS} -agentlib:yjpagent=port={{ cp_yourkit_agent_port }}"
         state: present
         create: true
         mode: 0755
@@ -69,12 +70,13 @@
 
     - name: "Enable YourKit ports in firewalld"
       become: true
-      firewalld:
-        port: "{{cp_yourkit_agent_port}}/tcp"
+      ansible.posix.firewalld:
+        port: "{{ cp_yourkit_agent_port }}/tcp"
         state: enabled
         permanent: true
         offline: false
       when:
+        - "'services' in ansible_facts"
         - "'firewalld.service' in ansible_facts.services"
       tags:
         - system
@@ -82,6 +84,6 @@
         - debugging
   vars:
     cp_yourkit_guest_home: "/opt/yjp/bin/linux-x86-64"
-    cp_yourkit_guest_library: "{{cp_yourkit_guest_home}}/libyjpagent.so"
+    cp_yourkit_guest_library: "{{ cp_yourkit_guest_home }}/libyjpagent.so"
   when:
     - cp_yourkit_library is file
