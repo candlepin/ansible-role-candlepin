@@ -69,6 +69,7 @@
     name: mariadb.service
     enabled: true
     state: started
+  ignore_errors: "{{ ansible_check_mode }}"
   tags:
     - candlepin
     - mariadb
@@ -102,6 +103,7 @@
 - name: "Create the 'candlepin' MariaDB user"
   become: true
   ansible.builtin.command: "mysql --user root --execute=\"CREATE USER 'candlepin'@'localhost'; GRANT ALL PRIVILEGES on candlepin.* TO 'candlepin'@'localhost' WITH GRANT OPTION;\""
+  ignore_errors: "{{ ansible_check_mode }}"
   tags:
     - candlepin
     - mariadb
@@ -111,6 +113,7 @@
     login_user: candlepin
     name: candlepin
     state: present
+  ignore_errors: "{{ ansible_check_mode }}"
   tags:
     - candlepin
     - mariadb

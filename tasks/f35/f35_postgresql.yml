@@ -15,7 +15,8 @@
 - name: "Initialize PostgreSQL database"
   become: true
   ansible.builtin.command:
-    cmd: postgresql-setup --initdb --unit postgresql
+    # cmd: postgresql-setup --initdb --unit postgresql
+    cmd: su - postgres -c "PGDATA=/var/lib/pgsql/data initdb"
     creates: "/var/lib/pgsql/data/PG_VERSION"
     warn: false
   tags:

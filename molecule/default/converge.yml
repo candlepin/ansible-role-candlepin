@@ -6,7 +6,7 @@
   vars:
     candlepin_user: "root"
     candlepin_user_home: "/root/"
-    cp_configure_postgresql: false
+    cp_configure_postgresql: true
     cp_configure_mariadb: false
     cp_configure_user_env: true
     cp_configure_debugging: true
@@ -47,6 +47,18 @@
           - which
       when:
         - ansible_distribution_major_version == '7'
+
+    - name: Wait for systemd to complete initialization.
+      ansible.builtin.command: systemctl is-system-running
+      register: systemctl_status
+      until: >
+        'running' in systemctl_status.stdout or
+        'degraded' in systemctl_status.stdout
+      retries: 30
+      delay: 5
+      when: ansible_service_mgr == 'systemd'
+      changed_when: false
+      failed_when: systemctl_status.rc > 1
 
     - name: "Include ansible-role-candlepin"
       ansible.builtin.include_role:
