@@ -69,7 +69,6 @@
     name: mariadb.service
     enabled: true
     state: started
-  ignore_errors: "{{ ansible_check_mode }}"
   tags:
     - candlepin
     - mariadb
@@ -83,37 +82,36 @@
 # If this decision is ever flipped, the following tasks can be used to create the user with the mysql_user
 # task instead:
 #
-# - name: "Allow insecure authentication for root"
-#   become: true
-#   command: "mysql -u root -e \"ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password;\""
-#   tags:
-#     - candlepin
-#     - mariadb
-#
-# - name: "Create the 'candlepin' MariaDB user"
-#   become: true
-#   mysql_user:
-#     name: candlepin
-#     priv: "candlepin.*:ALL,GRANT"
-#     state: present
-#   tags:
-#     - candlepin
-#     - mariadb
-
-- name: "Create the 'candlepin' MariaDB user"
+- name: "Allow insecure authentication for root"
   become: true
-  ansible.builtin.command: "mysql --user root --execute=\"CREATE USER 'candlepin'@'localhost'; GRANT ALL PRIVILEGES on candlepin.* TO 'candlepin'@'localhost' WITH GRANT OPTION;\""
-  ignore_errors: "{{ ansible_check_mode }}"
+  ansible.builtin.command: "mysql -u root -e \"ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password;\""
+  changed_when: false
   tags:
     - candlepin
     - mariadb
+
+- name: "Create the 'candlepin' MariaDB user"
+  become: true
+  community.mysql.mysql_user:
+    name: candlepin
+    priv: "candlepin.*:ALL,GRANT"
+    state: present
+  tags:
+    - candlepin
+    - mariadb
+
+# - name: "Create the 'candlepin' MariaDB user"
+#   become: true
+#   ansible.builtin.command: "mysql --user root --execute=\"CREATE USER 'candlepin'@'localhost'; GRANT ALL PRIVILEGES on candlepin.* TO 'candlepin'@'localhost' WITH GRANT OPTION;\""
+#   tags:
+#     - candlepin
+#     - mariadb
 
 - name: "Create the 'candlepin' MariaDB database"
   community.mysql.mysql_db:
     login_user: candlepin
     name: candlepin
     state: present
-  ignore_errors: "{{ ansible_check_mode }}"
   tags:
     - candlepin
     - mariadb

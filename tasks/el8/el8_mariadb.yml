@@ -4,6 +4,7 @@
   ansible.builtin.command:
     cmd: dnf module -y enable mariadb
     warn: false
+  changed_when: false
   tags:
     - candlepin
     - mariadb
