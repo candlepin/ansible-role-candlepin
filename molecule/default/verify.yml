@@ -1,0 +1,21 @@
+---
+# After role verifications
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+
+  tasks:
+  - name: Get candlepin status
+    uri:
+      url: https://localhost:8443/candlepin/status
+      method: GET
+    register: candlepin_status
+
+  - name: show status
+    debug:
+      var: candlepin_status.json
+
+  - name: Assert Candlepin has been deployed
+    ansible.builtin.assert:
+      that: "'version' in candlepin_status.json"
