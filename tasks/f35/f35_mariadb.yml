@@ -73,39 +73,13 @@
     - candlepin
     - mariadb
 
-# Impl note:
-# Newer versions of MariaDB/MySQL restrict the root user a bit more than previous, causing our old user
-# creation task to fail. We can work around this by reverting to the older authentication for the root
-# user, but that's more insecure than just isolating the jank to the single user creation task and
-# leaving the root account on the target system alone entirely.
-#
-# If this decision is ever flipped, the following tasks can be used to create the user with the mysql_user
-# task instead:
-#
-- name: "Allow insecure authentication for root"
+- name: "Create the 'candlepin' MariaDB user"
   become: true
-  ansible.builtin.command: "mysql -u root -e \"ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password;\""
+  ansible.builtin.command: "mysql --user root --execute=\"CREATE USER IF NOT EXISTS 'candlepin'@'localhost'; GRANT ALL PRIVILEGES on candlepin.* TO 'candlepin'@'localhost' WITH GRANT OPTION;\""
   changed_when: false
   tags:
     - candlepin
     - mariadb
-
-- name: "Create the 'candlepin' MariaDB user"
-  become: true
-  community.mysql.mysql_user:
-    name: candlepin
-    priv: "candlepin.*:ALL,GRANT"
-    state: present
-  tags:
-    - candlepin
-    - mariadb
-
-# - name: "Create the 'candlepin' MariaDB user"
-#   become: true
-#   ansible.builtin.command: "mysql --user root --execute=\"CREATE USER 'candlepin'@'localhost'; GRANT ALL PRIVILEGES on candlepin.* TO 'candlepin'@'localhost' WITH GRANT OPTION;\""
-#   tags:
-#     - candlepin
-#     - mariadb
 
 - name: "Create the 'candlepin' MariaDB database"
   community.mysql.mysql_db:

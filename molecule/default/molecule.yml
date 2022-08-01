@@ -2,16 +2,11 @@
 dependency:
   name: galaxy
 driver:
-  name: docker
-  # name: podman
+  name: containers
 platforms:
   - name: instance
-    image: "geerlingguy/docker-${MOLECULE_DISTRO:-fedora35}-ansible:latest"
-    # command: /sbin/init
+    image: "docker.io/geerlingguy/docker-${MOLECULE_DISTRO:-fedora35}-ansible:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
-    # tmpfs:
-    #   - /run
-    #   - /tmp
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
     privileged: true
@@ -20,6 +15,7 @@ provisioner:
   name: ansible
 verifier:
   name: ansible
+# github will run the linter; uncomment to have molecule do it
 # lint: |
 #   set -e
 #   yamllint .

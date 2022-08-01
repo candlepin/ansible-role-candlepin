@@ -11,7 +11,7 @@
     cp_configure_user_env: true
     cp_configure_debugging: true
     cp_git_checkout: true
-    cp_deploy: false
+    cp_deploy: true
     rvm1_install_flags: "--auto-dotfiles"
     rvm1_install_path: "/usr/local/rvm"
 
@@ -25,6 +25,8 @@
         name:
           - ca-certificates
           - findutils
+          - hostname
+          - initscripts-service
           - procps-ng
           - python3
           - python3-libselinux

@@ -61,7 +61,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install test dependencies.
-        run: pip3 install ansible molecule[docker] docker
+        run: pip3 install ansible molecule[docker] docker molecule-containers
 
       - name: Install galaxy requirements
         run: ansible-galaxy install rvm.ruby
