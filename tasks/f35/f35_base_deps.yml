@@ -1,7 +1,7 @@
 ---
 - name: "Disable SELinux"
   become: true
-  selinux:
+  ansible.posix.selinux:
     state: disabled
   tags:
     - system
@@ -10,9 +10,10 @@
 # FIXME: Update this task to use the dnf module once Ansible 2.10 or newer is readily available
 - name: "Update system packages"
   become: true
-  command:
+  ansible.builtin.command:
     cmd: dnf update -y --allowerasing
     warn: false
+  changed_when: false
   tags:
     - system
     - system_update
@@ -20,7 +21,7 @@
 
 - name: "Install Candlepin requirements"
   become: true
-  package:
+  ansible.builtin.package:
     name:
       - git
       - gcc
@@ -51,20 +52,22 @@
 # root permissions. Using become and the raw shell command invokes these in root's environment,
 # which will fail at best, or silently map the wrong command at worst.
 - name: "Configure alternatives: java"
-  shell: sh -c 'sudo alternatives --set java /usr/lib/jvm/java-11-openjdk-*/bin/java'
+  ansible.builtin.shell: sh -c 'sudo alternatives --set java /usr/lib/jvm/java-11-openjdk-*/bin/java'
+  changed_when: false
   tags:
     - base_deps
     - candlepin
 
 - name: "Configure alternatives: javac"
-  shell: sh -c 'sudo alternatives --set javac /usr/lib/jvm/java-11-openjdk-*/bin/javac'
+  ansible.builtin.shell: sh -c 'sudo alternatives --set javac /usr/lib/jvm/java-11-openjdk-*/bin/javac'
+  changed_when: false
   tags:
     - base_deps
     - candlepin
 
 - name: "Update Tomcat configuration to use Alternatives-configured Java"
   become: true
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/tomcat/tomcat.conf
     regexp: "JAVA_HOME="
     line: "JAVA_HOME=\"/usr/lib/jvm/java\""
@@ -74,8 +77,8 @@
 
 - name: "Enable necessary ports in firewalld"
   become: true
-  firewalld:
-    port: "{{item}}/tcp"
+  ansible.posix.firewalld:
+    port: "{{ item }}/tcp"
     state: enabled
     permanent: true
     offline: false
@@ -85,6 +88,7 @@
     - 8080    # Candlepin Tomcat server
     - 8443    # ^
   when:
+    - "'services' in ansible_facts"
     - "'firewalld.service' in ansible_facts.services"
   tags:
     - system

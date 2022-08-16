@@ -6,35 +6,36 @@
 - name: "Deploy Candlepin"
   block:
     - name: "Ensure the Candlepin directory exists"
-      stat:
-        path: "{{candlepin_home}}"
+      ansible.builtin.stat:
+        path: "{{ candlepin_home }}"
       register: candlepin_home_dir
 
     - name: "Check for legacy Candlepin deploy script"
-      stat:
-        path: "{{candlepin_home}}/server/bin/deploy"
+      ansible.builtin.stat:
+        path: "{{ candlepin_home }}/server/bin/deploy"
       register: cp_deploy_script_file
       when:
         - candlepin_home_dir.stat.isdir
 
     - name: "Update Candlepin deploy script path to use legacy path"
-      set_fact:
-        cp_deploy_script: "{{candlepin_home}}/server/bin/deploy"
+      ansible.builtin.set_fact:
+        cp_deploy_script: "{{ candlepin_home }}/server/bin/deploy"
       when:
         - candlepin_home_dir.stat.isdir
         - cp_deploy_script_file.stat.exists
 
     - name: "Execute deploy script"
-      command:
-        cmd: "{{cp_deploy_script}} {{cp_deploy_args}}"
-        chdir: "{{candlepin_home}}"
+      ansible.builtin.command:
+        cmd: "{{ cp_deploy_script }} {{ cp_deploy_args }}"
+        chdir: "{{ candlepin_home }}"
         warn: false
+      changed_when: false
       when:
         - candlepin_home_dir.stat.isdir
   environment:
     JAVA_HOME: "/usr/lib/jvm/java"
   vars:
-    cp_deploy_script: "{{candlepin_home}}/bin/deployment/deploy"
+    cp_deploy_script: "{{ candlepin_home }}/bin/deployment/deploy"
   tags:
     - candlepin
     - candlepin-deploy

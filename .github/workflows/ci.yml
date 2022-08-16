@@ -1,0 +1,74 @@
+---
+name: CI
+'on':
+  pull_request:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: "30 4 * * 4"
+
+defaults:
+  run:
+    working-directory: 'ansible-role-candlepin'
+
+jobs:
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the codebase.
+        uses: actions/checkout@v2
+        with:
+          path: 'ansible-role-candlepin'
+
+      - name: Set up Python 3.
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install test dependencies.
+        run: pip3 install yamllint ansible-lint
+
+      - name: Lint code.
+        run: |
+          yamllint .
+          ansible-lint .
+
+  molecule:
+    name: Molecule
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        distro:
+          - fedora35
+          - centos8
+          - centos7
+          # - quay.io/centos/centos:centos7
+          # - quay.io/centos/centos:stream8
+          # - quay.io/fedora/fedora:35
+
+    steps:
+      - name: Check out the codebase.
+        uses: actions/checkout@v2
+        with:
+          path: 'ansible-role-candlepin'
+
+      - name: Set up Python 3.
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install test dependencies.
+        run: pip3 install ansible molecule[docker] docker molecule-containers
+
+      - name: Install galaxy requirements
+        run: ansible-galaxy install rvm.ruby
+
+      - name: Run Molecule tests.
+        run: molecule -v test
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO: ${{ matrix.distro }}

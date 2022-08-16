@@ -1,12 +1,12 @@
 # These tasks must be run as the candlepin user. main.yml imports this file with become_user set to
-# {{candlepin_user}}, but if these are included or imported anywhere else, that will likely need to
+# {{ candlepin_user }}, but if these are included or imported anywhere else, that will likely need to
 # be done there as well.
 ---
 - name: "Checkout Candlepin Repo"
-  git:
-    repo: "{{cp_git_repo}}"
-    version: "{{cp_git_ref}}"
-    dest: "{{candlepin_home}}"
+  ansible.builtin.git:
+    repo: "{{ cp_git_repo }}"
+    version: "{{ cp_git_ref }}"
+    dest: "{{ candlepin_home }}"
     force: true
     clone: true
   when:
@@ -17,8 +17,8 @@
 
 # Ensure Candlepin exists in a deployable state before attempting to run the bundle command
 - name: "Ensure the Candlepin directory exists"
-  stat:
-    path: "{{candlepin_home}}"
+  ansible.builtin.stat:
+    path: "{{ candlepin_home }}"
   register: candlepin_home_dir
   tags:
     - candlepin
@@ -27,12 +27,13 @@
 # Impl note:
 # This has to be done with a login shell to get the correct version of Ruby when using RVM
 - name: "Install Candlepin gem bundle"
-  shell: bash --login -c 'bundle install'
+  ansible.builtin.shell: bash --login -c 'bundle install'
   args:
-    chdir: "{{candlepin_home}}"
+    chdir: "{{ candlepin_home }}"
     warn: false
   when:
     - candlepin_home_dir.stat.exists and candlepin_home_dir.stat.isdir
+  changed_when: false
   tags:
     - candlepin
     - candlepin-setup

@@ -1,0 +1,84 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    candlepin_user: "root"
+    candlepin_user_home: "/root/"
+    cp_configure_postgresql: true
+    cp_configure_mariadb: true
+    cp_configure_user_env: true
+    cp_configure_debugging: true
+    cp_git_checkout: true
+    cp_deploy: true
+    rvm1_install_flags: "--auto-dotfiles"
+    rvm1_install_path: "/usr/local/rvm"
+
+  tasks:
+    - name: Create initial user
+      ansible.builtin.user:
+        name: "candlepin"
+
+    - name: Install deps
+      ansible.builtin.package:
+        name:
+          - ca-certificates
+          - findutils
+          - hostname
+          - initscripts-service
+          - procps-ng
+          - python3
+          - python3-libselinux
+          - selinux-policy
+          - which
+        state: present
+      when:
+        - ansible_distribution_major_version == '35'
+
+    - name: Install deps
+      ansible.builtin.package:
+        name:
+          - ca-certificates
+          - findutils
+          - hostname
+          - procps-ng
+          - python3
+          - python3-libselinux
+          - selinux-policy
+          - which
+        state: present
+      when:
+        - ansible_distribution_major_version == '8'
+
+    - name: Install deps
+      ansible.builtin.package:
+        name:
+          - ca-certificates
+          - findutils
+          - procps-ng
+          - python3
+          - python3-libselinux
+          - python36-PyMySQL
+          - python3-psycopg2
+          - libselinux-python
+          - selinux-policy
+          - which
+      when:
+        - ansible_distribution_major_version == '7'
+
+    - name: Wait for systemd to complete initialization.
+      ansible.builtin.command: systemctl is-system-running
+      register: systemctl_status
+      until: >
+        'running' in systemctl_status.stdout or
+        'degraded' in systemctl_status.stdout
+      retries: 30
+      delay: 5
+      when: ansible_service_mgr == 'systemd'
+      changed_when: false
+      failed_when: systemctl_status.rc > 1
+
+    - name: "Include ansible-role-candlepin"
+      ansible.builtin.include_role:
+        name: "ansible-role-candlepin"
