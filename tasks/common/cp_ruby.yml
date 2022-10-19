@@ -1,0 +1,12 @@
+---
+- name: Ensure required openssl is installed
+  command: "rvm pkg install openssl"
+  when:
+    - ansible_facts['distribution'] in ["CentOS", "RedHat"]
+    - ansible_facts['distribution_major_version'] == "9"
+
+- name: Ensure ruby {{ ruby_version }} is installed
+  command: "rvm install {{ ruby_version }} --with-openssl-dir=$HOME/.rvm/usr"
+
+- name: Ensure ruby {{ ruby_version }} is set as default
+  command: "rvm alias create default ruby-{{ ruby_version }}"

@@ -5,6 +5,12 @@
   tags:
     - always
 
+- name: "Include ruby tasks"
+  ansible.builtin.include_tasks:
+    file: common/cp_ruby.yml
+  tags:
+    - always
+
 - name: "Include EL7 tasks"
   ansible.builtin.include_tasks:
     file: el7/el7_tasks.yml
@@ -20,6 +26,15 @@
   when:
     - ansible_facts['distribution'] in ["CentOS", "RedHat"]
     - ansible_facts['distribution_major_version'] == "8"
+  tags:
+    - always
+
+- name: "Include EL9 tasks"
+  ansible.builtin.include_tasks:
+    file: el9/el9_tasks.yml
+  when:
+    - ansible_facts['distribution'] in ["CentOS", "RedHat"]
+    - ansible_facts['distribution_major_version'] == "9"
   tags:
     - always
 

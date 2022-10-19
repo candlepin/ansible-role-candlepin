@@ -31,9 +31,10 @@ galaxy_info:
 dependencies:
   - role: rvm.ruby
     vars:
-      rvm1_rubies:
-        - 'ruby-2.4'
+      # This makes sure the role only installs the RVM. We have to install
+      # the ruby itself later as some environments require additional steps.
+      rvm1_rubies: []
       rvm1_user: "{{ candlepin_user | default('candlepin') }}"
-      rvm1_bundler_install: true
+      rvm1_bundler_install: false
     tags:
       - molecule-idempotence-notest

@@ -1,0 +1,10 @@
+---
+- import_tasks: el9_base_deps.yml
+
+- import_tasks: el9_postgresql.yml
+  when:
+    cp_configure_postgresql | bool
+
+- import_tasks: el9_mariadb.yml
+  when:
+    cp_configure_mariadb | bool
