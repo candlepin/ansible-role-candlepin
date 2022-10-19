@@ -19,22 +19,26 @@ galaxy_info:
   platforms:
     - name: EL
       versions:
-      - '7'
-      - '8'
+        - '7'
+        - '8'
+        - '9'
     - name: Fedora
       versions:
-      - all
+        - all
   galaxy_tags:
     - candlepin
     - entitlement
 
 dependencies:
-  - role: rvm.ruby
+  - src: git+https://github.com/Januson/rvm1-ansible.git
+    version: skip-rubies
+    name: ruby
     vars:
-      rvm1_rubies:
-        - 'ruby-2.4'
+      # This makes sure the role only installs the RVM. We have to install
+      # the ruby itself later as some environments require additional steps.
+      rvm1_rubies: [ ]
       rvm1_user: "{{ candlepin_user | default('candlepin') }}"
-      rvm1_bundler_install: true
+      rvm1_bundler_install: false
     tags:
       - molecule-idempotence-notest
     when:
