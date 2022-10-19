@@ -1,23 +1,55 @@
 ---
+- name: "Setup el7 postgresql repo"
+  block:
+  - name: "Set up repository that includes PostgreSQL 12"
+    become: true
+    ansible.builtin.yum:
+      name: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+      state: present
+    tags:
+      - postgresql
+      - candlepin
+
+  - name: "Enable PostgreSQL 12 repository"
+    become: true
+    ansible.builtin.command: yum-config-manager --enable pgdg12
+    changed_when: false
+    tags:
+      - postgresql
+      - candlepin
+  when:
+    - ansible_distribution in ["CentOS", "RedHat"]
+    - ansible_distribution_major_version == "7"
+
+- name: "Enable PostgreSQL DNF modules"
+  become: true
+  ansible.builtin.command:
+    cmd: dnf module -y enable postgresql:12
+    warn: false
+  changed_when: false
+  when:
+    - ansible_distribution in ["CentOS", "RedHat"]
+    - ansible_distribution_major_version == "8"
+  tags:
+    - postgresql
+    - candlepin
+
 - name: "Install PostgreSQL packages"
   become: true
   ansible.builtin.package:
-    name:
-      - postgresql-server
-      - postgresql
-      - postgresql-jdbc
-      - python3-psycopg2
+    name: "{{ item }}"
     state: present
+  loop: "{{ postgresql_packages }}"
   tags:
     - postgresql
     - candlepin
 
 - name: "Initialize PostgreSQL database"
   become: true
-  become_user: postgres
+  become_user: "{{ postgresql_init_user }}"
   ansible.builtin.command:
-    cmd: pg_ctl initdb -D /var/lib/pgsql/data
-    creates: "/var/lib/pgsql/data/PG_VERSION"
+    cmd: "{{ postgresql_init_cmd }}"
+    creates: "{{ postgresql_data_path }}/PG_VERSION"
     warn: false
   tags:
     - postgresql
@@ -26,7 +58,7 @@
 - name: "Configure PostgreSQL to trust local connections (1 of 3)"
   become: true
   community.postgresql.postgresql_pg_hba:
-    dest: /var/lib/pgsql/data/pg_hba.conf
+    dest: "{{ postgresql_data_path }}/pg_hba.conf"
     contype: local
     databases: all
     users: all
@@ -40,7 +72,7 @@
 - name: "Configure PostgreSQL to trust local connections (2 of 3)"
   become: true
   community.postgresql.postgresql_pg_hba:
-    dest: /var/lib/pgsql/data/pg_hba.conf
+    dest: "{{ postgresql_data_path }}/pg_hba.conf"
     contype: host
     databases: all
     users: all
@@ -55,7 +87,7 @@
 - name: "Configure PostgreSQL to trust local connections (3 of 3)"
   become: true
   community.postgresql.postgresql_pg_hba:
-    dest: /var/lib/pgsql/data/pg_hba.conf
+    dest: "{{ postgresql_data_path }}/pg_hba.conf"
     contype: host
     databases: all
     users: all
@@ -70,7 +102,7 @@
 - name: "Enable and start the PostgreSQL service"
   become: true
   ansible.builtin.service:
-    name: postgresql.service
+    name: "{{ postgresql_service }}"
     enabled: true
     state: started
   tags:

@@ -5,6 +5,32 @@
   tags:
     - always
 
+- name: "Include RHEL/Centos 7 variables"
+  ansible.builtin.include_vars:
+    file: "el7.yml"
+  when:
+    - ansible_distribution in ["CentOS", "RedHat"]
+    - ansible_distribution_major_version == "7"
+  tags:
+    - always
+
+- name: "Include RHEL/Centos 8+ variables"
+  ansible.builtin.include_vars:
+    file: "el8.yml"
+  when:
+    - ansible_distribution in ["CentOS", "RedHat"]
+    - ansible_distribution_major_version >= "8"
+  tags:
+    - always
+
+- name: "Include Fedora variables"
+  ansible.builtin.include_vars:
+    file: "f35.yml"
+  when:
+    - ansible_distribution == "Fedora"
+  tags:
+    - always
+
 - name: "Include EL7 tasks"
   ansible.builtin.include_tasks:
     file: el7/el7_tasks.yml
@@ -23,6 +49,15 @@
   tags:
     - always
 
+- name: "Include EL9 tasks"
+  ansible.builtin.include_tasks:
+    file: el9/el9_tasks.yml
+  when:
+    - ansible_facts['distribution'] in ["CentOS", "RedHat"]
+    - ansible_facts['distribution_major_version'] == "9"
+  tags:
+    - always
+
 - name: "Include F35+ tasks"
   ansible.builtin.include_tasks:
     file: f35/f35_tasks.yml
@@ -31,6 +66,16 @@
     - ansible_facts['distribution_major_version'] >= "35"
   tags:
     - always
+
+- name: "Include postgresql tasks"
+  ansible.builtin.import_tasks: common/cp_postgresql.yml
+  when:
+    - cp_configure_postgresql | bool
+
+- name: "Include mariadb tasks"
+  ansible.builtin.import_tasks: common/cp_mariadb.yml
+  when:
+    - cp_configure_mariadb | bool
 
 - name: "Include Candlepin debug tasks"
   ansible.builtin.import_tasks: common/cp_debugging.yml

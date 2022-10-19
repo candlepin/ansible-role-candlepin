@@ -1,0 +1,19 @@
+# Variables used by various tasks in the role. These should only be updated with respect to changes
+# in the Candlepin repo itself, or the tasks surrounding its setup.
+---
+mariadb_packages:
+  - mariadb
+  - mariadb-java-client
+  - mariadb-server
+  - python3-PyMySQL
+mariadb_config_file: /etc/my.cnf.d/mariadb-server.cnf
+
+postgresql_packages:
+  - postgresql-server
+  - postgresql
+  - postgresql-jdbc
+  - python3-psycopg2
+postgresql_init_user: postgres
+postgresql_init_cmd: pg_ctl initdb -D /var/lib/pgsql/data
+postgresql_data_path: /var/lib/pgsql/data
+postgresql_service: postgresql.service
