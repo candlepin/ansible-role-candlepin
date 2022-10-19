@@ -1,0 +1,14 @@
+---
+- name: "Install rvm/ruby"
+  ansible.builtin.include_role:
+    name: rvm1-ansible
+  vars:
+    rvm1_rubies:
+      - "{{ ruby_version }}"
+    rvm1_user: "{{ candlepin_user | default('candlepin') }}"
+    rvm1_bundler_install: true
+  when:
+    - cp_configure_ruby | bool
+  tags:
+    - molecule-idempotence-notest
+    - ruby

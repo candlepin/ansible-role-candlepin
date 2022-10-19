@@ -2,6 +2,9 @@
 - name: "Include base deps tasks"
   ansible.builtin.import_tasks: el7_base_deps.yml
 
+- name: "Include ruby tasks"
+  ansible.builtin.import_tasks: el7_ruby.yml
+
 - name: "Include postgresql tasks"
   ansible.builtin.import_tasks: el7_postgresql.yml
   when:

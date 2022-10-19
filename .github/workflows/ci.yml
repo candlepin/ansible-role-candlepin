@@ -64,7 +64,7 @@ jobs:
         run: pip3 install ansible molecule[docker] docker molecule-containers
 
       - name: Install galaxy requirements
-        run: ansible-galaxy install rvm.ruby
+        run: ansible-galaxy install git+https://github.com/Januson/rvm1-ansible.git,skip-rubies
 
       - name: Run Molecule tests.
         run: molecule -v test
