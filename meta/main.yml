@@ -21,6 +21,7 @@ galaxy_info:
       versions:
       - '7'
       - '8'
+      - '9'
     - name: Fedora
       versions:
       - all
@@ -31,10 +32,10 @@ galaxy_info:
 dependencies:
   - role: rvm.ruby
     vars:
-      # This makes sure the role only installs the RVM. We have to install
-      # the ruby itself later as some environments require additional steps.
-      rvm1_rubies: []
+      rvm1_rubies:
+        - 'ruby-2.4'
       rvm1_user: "{{ candlepin_user | default('candlepin') }}"
-      rvm1_bundler_install: false
+      rvm1_bundler_install: true
+      rvm1_autolib_mode: 3
     tags:
       - molecule-idempotence-notest

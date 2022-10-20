@@ -5,11 +5,11 @@
   tags:
     - always
 
-- name: "Include ruby tasks"
-  ansible.builtin.include_tasks:
-    file: common/cp_ruby.yml
-  tags:
-    - always
+#- name: "Include ruby tasks"
+#  ansible.builtin.include_tasks:
+#    file: common/cp_ruby.yml
+#  tags:
+#    - always
 
 - name: "Include EL7 tasks"
   ansible.builtin.include_tasks:
