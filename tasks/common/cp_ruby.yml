@@ -8,5 +8,11 @@
 - name: Ensure ruby {{ ruby_version }} is installed
   command: "rvm install {{ ruby_version }} --with-openssl-dir=$HOME/.rvm/usr"
 
-- name: Ensure ruby {{ ruby_version }} is set as default
-  command: "rvm alias create default ruby-{{ ruby_version }}"
+#- name: Ensure bundler
+#  command: "bundle install"
+#
+#- name: Ensure ruby {{ ruby_version }} is set as default
+#  command: "{{ item }}"
+#  loop:
+#    - "rvm --default use ruby-{{ ruby_version }}"
+#    - "rvm alias create default ruby-{{ ruby_version }}"
