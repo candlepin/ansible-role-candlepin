@@ -48,7 +48,7 @@ directory, but this can be modified by changing the three Candlepin home or user
 - `candlepin_user`: the user to install, build, and run as; defaults to "candlepin"
 - `candlepin_user_home`: the home directory of the selected user; defaults to "/home/{{candlepin_user}}"
 - `candlepin_home`: the home directory for the Candlepin checkout or mapping; defaults to
-  "{{candlepin_user_home}}/devel/candlepin"
+  "{{ candlepin_user_home }}/devel/candlepin"
 
 In many cases, this can be left as-is. However, in the case of a Vagrant deployment, it is likely these will
 need to be changed accordingly. For example, in a typical Vagrant setup where the Candlepin repo is mapped in

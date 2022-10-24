@@ -28,6 +28,7 @@ rules:
     level: error
   indentation: disable
   key-duplicates: enable
+  key-ordering: disable
   line-length: disable
   new-line-at-end-of-file: disable
   new-lines:
