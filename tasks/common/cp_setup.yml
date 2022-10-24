@@ -32,6 +32,7 @@
     chdir: "{{ candlepin_home }}"
     warn: false
   when:
+    - cp_configure_ruby | bool
     - candlepin_home_dir.stat.exists and candlepin_home_dir.stat.isdir
   changed_when: false
   tags:
