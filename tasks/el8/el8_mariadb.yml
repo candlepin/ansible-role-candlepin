@@ -37,7 +37,7 @@
 
 - name: "Set Candlepin-specific MySQL configuration (character-set-server)"
   become: true
-  ini_file:
+  community.general.ini_file:
     path: /etc/my.cnf.d/candlepin.cnf
     mode: '0644'
     section: mysqld
@@ -50,7 +50,7 @@
 
 - name: "Set Candlepin-specific MySQL configuration (transaction-isolation)"
   become: true
-  ini_file:
+  community.general.ini_file:
     path: /etc/my.cnf.d/candlepin.cnf
     mode: '0644'
     section: mysqld
@@ -63,7 +63,7 @@
 
 - name: "Set Candlepin-specific MySQL configuration (default-time-zone)"
   become: true
-  ini_file:
+  community.general.ini_file:
     path: /etc/my.cnf.d/mariadb-server.cnf
     section: server
     option: default-time-zone
