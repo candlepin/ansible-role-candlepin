@@ -42,9 +42,10 @@ jobs:
     strategy:
       matrix:
         distro:
-          - fedora35
-          - centos8
-          - centos7
+          - docker.io/geerlingguy/docker-fedora35-ansible:latest
+          - quay.io/centos/centos:stream9
+          - docker.io/geerlingguy/docker-centos8-ansible:latest
+          - docker.io/geerlingguy/docker-centos7-ansible:latest
           # - quay.io/centos/centos:centos7
           # - quay.io/centos/centos:stream8
           # - quay.io/fedora/fedora:35
