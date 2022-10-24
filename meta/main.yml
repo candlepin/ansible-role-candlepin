@@ -37,3 +37,5 @@ dependencies:
       rvm1_bundler_install: true
     tags:
       - molecule-idempotence-notest
+    when:
+      - cp_configure_ruby | bool
