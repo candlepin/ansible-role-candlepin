@@ -67,6 +67,9 @@ jobs:
       - name: Install galaxy requirements
         run: ansible-galaxy install rvm.ruby
 
+      - name: Install galaxy requirements2
+        run: ansible-galaxy install git+https://github.com/Januson/rvm1-ansible.git,skip-rubies
+
       - name: Run Molecule tests.
         run: molecule -v test
         env:

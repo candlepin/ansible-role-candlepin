@@ -32,7 +32,7 @@ galaxy_info:
 dependencies:
   - src: git+https://github.com/Januson/rvm1-ansible.git
     version: skip-rubies
-    name: ruby
+#    name: ruby
     vars:
       # This makes sure the role only installs the RVM. We have to install
       # the ruby itself later as some environments require additional steps.
