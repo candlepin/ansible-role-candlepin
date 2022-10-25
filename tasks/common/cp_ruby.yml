@@ -5,6 +5,12 @@
     - ansible_facts['distribution'] in ["CentOS", "RedHat"]
     - ansible_facts['distribution_major_version'] == "9"
 
+- name: Ensure required openssl is installed
+  ansible.builtin.command: "rvm pkg install openssl"
+  when:
+    - ansible_facts['distribution'] in ["Fedora"]
+    - ansible_facts['distribution_major_version'] == "36"
+
 - name: Ensure correct ruby version is installed
   ansible.builtin.command: "rvm install {{ ruby_version }} --with-openssl-dir=$HOME/.rvm/usr"
 
