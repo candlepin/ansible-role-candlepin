@@ -23,6 +23,7 @@
   become: true
   ansible.builtin.package:
     name:
+      - acl
       - git
       - gcc
       - make
