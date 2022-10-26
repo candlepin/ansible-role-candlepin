@@ -42,6 +42,7 @@
       - createrepo_c
       - rpm-build
       - rpm-sign
+      - rubygems
     state: present
   tags:
     - base_deps
