@@ -34,7 +34,7 @@
           - which
         state: present
       when:
-        - ansible_distribution_major_version == '35'
+        - ansible_distribution_major_version == '35' or ansible_distribution_major_version == '36'
 
     - name: Install deps
       ansible.builtin.package:
