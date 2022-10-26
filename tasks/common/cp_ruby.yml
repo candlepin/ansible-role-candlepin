@@ -4,21 +4,40 @@
   when:
     - ansible_facts['distribution'] in ["CentOS", "RedHat"]
     - ansible_facts['distribution_major_version'] == "9"
+  tags:
+    - ruby
 
 - name: Ensure required openssl is installed
   ansible.builtin.command: "rvm pkg install openssl"
   when:
     - ansible_facts['distribution'] in ["Fedora"]
     - ansible_facts['distribution_major_version'] == "36"
+  tags:
+    - ruby
 
 - name: Ensure correct ruby version is installed
   ansible.builtin.command: "rvm install {{ ruby_version }} --with-openssl-dir=$HOME/.rvm/usr"
+  tags:
+    - ruby
+
+- name: "Install rubygems cli"
+  become: true
+  ansible.builtin.package:
+    name:
+      - rubygems
+    state: present
+  tags:
+    - ruby
 
 - name: Ensure bundler is installed
   ansible.builtin.command: "gem install bundler"
+  tags:
+    - ruby
 
 - name: Ensure correct ruby version is set as default
   ansible.builtin.command: "{{ item }}"
   loop:
     - "rvm --default use ruby-{{ ruby_version }}"
     - "rvm alias create default ruby-{{ ruby_version }}"
+  tags:
+    - ruby
