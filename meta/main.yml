@@ -31,18 +31,15 @@ galaxy_info:
 
 dependencies:
   - src: git+https://github.com/Januson/rvm1-ansible.git
-    version: pkg
+    version: skip-rubies
 #    name: ruby
     vars:
       # This makes sure the role only installs the RVM. We have to install
       # the ruby itself later as some environments require additional steps.
-      rvm1_rubies:
-        - 'ruby-2.4'
+      rvm1_rubies: [ ]
       rvm1_user: "{{ candlepin_user | default('candlepin') }}"
       rvm1_bundler_install: false
       rvm1_install_path: "{{ rvm_install_path }}"
-      rvm1_pkgs:
-        - "openssl"
     tags:
       - molecule-idempotence-notest
     when:
