@@ -2,8 +2,8 @@
 - name: Ensure required openssl is installed
   ansible.builtin.command: "{{ rvm_path }} pkg install openssl"
   when:
-    - ansible_facts['distribution'] in ["CentOS", "RedHat"] and ansible_facts['distribution_major_version'] >= "9" or
-      ansible_facts['distribution'] == "Fedora" and ansible_facts['distribution_major_version'] in version("36", '>=')
+    - ansible_facts['distribution'] in ["CentOS", "RedHat"] and ansible_facts['distribution_major_version'] == "9" or
+      ansible_facts['distribution'] == "Fedora" and ansible_facts['distribution_major_version'] == "36"
   tags:
     - ruby
 
@@ -16,8 +16,8 @@
   ansible.builtin.command: "{{ rvm_path }} install {{ ruby_version }} --with-openssl-dir={{ rvm_install_path }}/usr"
   when:
     - not ruby_version in rvm_list_strings.stdout_lines
-    - ansible_facts['distribution'] in ["CentOS", "RedHat"] and ansible_facts['distribution_major_version'] >= "9" or
-      ansible_facts['distribution'] == "Fedora" and ansible_facts['distribution_major_version'] >= "36"
+    - ansible_facts['distribution'] in ["CentOS", "RedHat"] and ansible_facts['distribution_major_version'] == "9" or
+      ansible_facts['distribution'] == "Fedora" and ansible_facts['distribution_major_version'] == "36"
   tags:
     - ruby
 
@@ -25,8 +25,8 @@
   ansible.builtin.command: "{{ rvm_path }} install {{ ruby_version }}"
   when:
     - not ruby_version in rvm_list_strings.stdout_lines
-    - ansible_facts['distribution'] in ["CentOS", "RedHat"] and ansible_facts['distribution_major_version'] < "9" or
-      ansible_facts['distribution'] == "Fedora" and ansible_facts['distribution_major_version'] < "36"
+    - ansible_facts['distribution'] in ["CentOS", "RedHat"] and ansible_facts['distribution_major_version'] != "9" or
+      ansible_facts['distribution'] == "Fedora" and ansible_facts['distribution_major_version'] != "36"
   tags:
     - ruby
 
