@@ -47,3 +47,23 @@ dependencies:
       - molecule-idempotence-notest
     when:
       - cp_configure_ruby | bool
+      - ansible_facts['distribution'] in ["CentOS", "RedHat"] and ansible_facts['distribution_major_version'] >= "9" or
+        ansible_facts['distribution'] == "Fedora" and ansible_facts['distribution_major_version'] >= "36"
+
+  - src: git+https://github.com/Januson/rvm1-ansible.git
+    version: skip-rubies
+#    name: ruby
+    vars:
+      # This makes sure the role only installs the RVM. We have to install
+      # the ruby itself later as some environments require additional steps.
+      rvm1_rubies:
+        - 'ruby-2.4'
+      rvm1_user: "{{ candlepin_user | default('candlepin') }}"
+      rvm1_bundler_install: false
+      rvm1_install_path: "{{ rvm_install_path }}"
+    tags:
+      - molecule-idempotence-notest
+    when:
+      - cp_configure_ruby | bool
+      - ansible_facts['distribution'] in ["CentOS", "RedHat"] and ansible_facts['distribution_major_version'] < "9" or
+        ansible_facts['distribution'] == "Fedora" and ansible_facts['distribution_major_version'] < "36"
