@@ -1,14 +1,14 @@
 ---
 - name: Ensure required openssl is installed
-  ansible.builtin.command: "rvm pkg install openssl"
-#  when:
-#    - ansible_facts['distribution'] in ["CentOS", "RedHat"] and ansible_facts['distribution_major_version'] >= "9" or
-#      ansible_facts['distribution'] == "Fedora" and ansible_facts['distribution_major_version'] >= "36"
+  ansible.builtin.command: "{{ rvm_path }} pkg install openssl"
+  when:
+    - ansible_facts['distribution'] in ["CentOS", "RedHat"] and ansible_facts['distribution_major_version'] >= "9" or
+      ansible_facts['distribution'] == "Fedora" and ansible_facts['distribution_major_version'] >= "36"
   tags:
     - ruby
 
 - name: Ensure correct ruby version is installed
-  ansible.builtin.command: "rvm install {{ ruby_version }} --with-openssl-dir=$HOME/.rvm/usr"
+  ansible.builtin.command: "{{ rvm_path }} install {{ ruby_version }} --with-openssl-dir=$HOME/.rvm/usr"
   tags:
     - ruby
 
