@@ -44,10 +44,10 @@
   tags:
     - ruby
 
-- name: Ensure correct ruby version is set as default
-  ansible.builtin.command: "{{ item }}"
-  loop:
-    - "{{ rvm_path }} --default use {{ ruby_version }}"
-    - "{{ rvm_path }} alias create default {{ ruby_version }}"
-  tags:
-    - ruby
+#- name: Ensure correct ruby version is set as default
+#  ansible.builtin.command: "{{ item }}"
+#  loop:
+#    - "{{ rvm_path }} --default use {{ ruby_version }}"
+#    - "{{ rvm_path }} alias create default {{ ruby_version }}"
+#  tags:
+#    - ruby
