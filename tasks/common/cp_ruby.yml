@@ -8,7 +8,7 @@
     - ruby
 
 - name: Detect rubies
-  command: '{{ rvm_path }} list strings'
+  ansible.builtin.command: '{{ rvm_path }} list strings'
   register: rvm_list_strings
   changed_when: False
 
@@ -47,7 +47,7 @@
 - name: Ensure correct ruby version is set as default
   ansible.builtin.command: "{{ item }}"
   loop:
-    - "{{ rvm_path }} --default use ruby-{{ ruby_version }}"
-    - "{{ rvm_path }} alias create default ruby-{{ ruby_version }}"
+    - "{{ rvm_path }} --default use {{ ruby_version }}"
+    - "{{ rvm_path }} alias create default {{ ruby_version }}"
   tags:
     - ruby

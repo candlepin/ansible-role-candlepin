@@ -3,4 +3,4 @@
 ---
 rvm_install_path: "/usr/local/rvm"
 rvm_path: "{{ rvm_install_path }}/bin/rvm"
-ruby_version: 2.4
+ruby_version: ruby-2.4.10
