@@ -40,6 +40,8 @@ dependencies:
       rvm1_user: "{{ candlepin_user | default('candlepin') }}"
       rvm1_bundler_install: false
       rvm1_install_path: "{{ rvm_install_path }}"
+      rvm1_pkgs:
+        - "openssl"
     tags:
       - molecule-idempotence-notest
     when:
