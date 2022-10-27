@@ -31,7 +31,7 @@ galaxy_info:
 
 dependencies:
   - src: git+https://github.com/Januson/rvm1-ansible.git
-    version: skip-rubies
+    version: pkg
 #    name: ruby
     vars:
       # This makes sure the role only installs the RVM. We have to install
@@ -51,7 +51,7 @@ dependencies:
         ansible_facts['distribution'] == "Fedora" and ansible_facts['distribution_major_version'] >= "36"
 
   - src: git+https://github.com/Januson/rvm1-ansible.git
-    version: skip-rubies
+    version: pkg
 #    name: ruby
     vars:
       # This makes sure the role only installs the RVM. We have to install
