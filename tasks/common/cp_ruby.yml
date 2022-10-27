@@ -8,7 +8,7 @@
     - ruby
 
 - name: Ensure correct ruby version is installed
-  ansible.builtin.command: "{{ rvm_path }} install {{ ruby_version }} --with-openssl-dir=$HOME/.rvm/usr"
+  ansible.builtin.command: "{{ rvm_path }} install {{ ruby_version }} --with-openssl-dir={{ rvm_install_path }}/usr"
   tags:
     - ruby
 
