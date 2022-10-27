@@ -9,6 +9,17 @@
 
 - name: Ensure correct ruby version is installed
   ansible.builtin.command: "{{ rvm_path }} install {{ ruby_version }} --with-openssl-dir={{ rvm_install_path }}/usr"
+  when:
+    - ansible_facts['distribution'] in ["CentOS", "RedHat"] and ansible_facts['distribution_major_version'] >= "9" or
+      ansible_facts['distribution'] == "Fedora" and ansible_facts['distribution_major_version'] >= "36"
+  tags:
+    - ruby
+
+- name: Ensure correct ruby version is installed
+  ansible.builtin.command: "{{ rvm_path }} install {{ ruby_version }}"
+  when:
+    - ansible_facts['distribution'] in ["CentOS", "RedHat"] and ansible_facts['distribution_major_version'] < "9" or
+      ansible_facts['distribution'] == "Fedora" and ansible_facts['distribution_major_version'] < "36"
   tags:
     - ruby
 
