@@ -43,8 +43,8 @@ jobs:
       matrix:
         distro:
 #          - quay.io/fedora/fedora:36
-#          - docker.io/geerlingguy/docker-fedora35-ansible:latest
-          - docker.io/geerlingguy/docker-fedora36-ansible:latest
+          - docker.io/geerlingguy/docker-fedora35-ansible:latest
+#          - docker.io/geerlingguy/docker-fedora36-ansible:latest
 #          - quay.io/centos/centos:stream9
 ##          - docker.io/geerlingguy/docker-centos8-ansible:latest
 #          - docker.io/geerlingguy/docker-centos7-ansible:latest
