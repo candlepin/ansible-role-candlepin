@@ -7,8 +7,6 @@
       - "{{ ruby_version }}"
     rvm1_user: "{{ candlepin_user | default('candlepin') }}"
     rvm1_bundler_install: true
-  when:
-    - cp_configure_ruby | bool
   tags:
     - molecule-idempotence-notest
     - ruby

@@ -4,13 +4,5 @@
 
 - name: "Include ruby tasks"
   ansible.builtin.import_tasks: el7_ruby.yml
-
-- name: "Include postgresql tasks"
-  ansible.builtin.import_tasks: el7_postgresql.yml
   when:
-    - cp_configure_postgresql | bool
-
-- name: "Include mariadb tasks"
-  ansible.builtin.import_tasks: el7_mariadb.yml
-  when:
-    - cp_configure_mariadb | bool
+    - cp_configure_ruby | bool

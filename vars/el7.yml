@@ -1,0 +1,18 @@
+# Variables used by various tasks in the role. These should only be updated with respect to changes
+# in the Candlepin repo itself, or the tasks surrounding its setup.
+---
+mariadb_packages:
+  - mariadb
+  - mariadb-server
+  - mysql-connector-java
+  - python-PyMySQL
+mariadb_config_file: /etc/my.cnf.d/server.cnf
+
+postgresql_packages:
+  - postgresql12-server
+  - postgresql12
+  - postgresql-jdbc
+  - python-psycopg2
+postgresql_init_cmd: postgresql-12-setup initdb
+postgresql_pg_hba_path: /var/lib/pgsql/12/data/pg_hba.conf
+postgresql_service: postgresql-12.service

@@ -5,6 +5,9 @@
     cmd: dnf module -y enable mariadb
     warn: false
   changed_when: false
+  when:
+    - ansible_facts['distribution'] in ["CentOS", "RedHat"]
+    - ansible_facts['distribution_major_version'] == "8"
   tags:
     - candlepin
     - mariadb
@@ -12,12 +15,9 @@
 - name: "Install MariaDB packages"
   become: true
   ansible.builtin.package:
-    name:
-      - mariadb
-      - mariadb-server
-      - mariadb-java-client
-      - python3-PyMySQL
+    name: "{{ item }}"
     state: present
+  loop: "{{ mariadb_packages }}"
   tags:
     - candlepin
     - mariadb
@@ -64,7 +64,7 @@
 - name: "Set Candlepin-specific MySQL configuration (default-time-zone)"
   become: true
   community.general.ini_file:
-    path: /etc/my.cnf.d/mariadb-server.cnf
+    path: "{{ mariadb_config_file }}"
     section: server
     option: default-time-zone
     value: "+00:00"
@@ -89,6 +89,20 @@
     name: candlepin
     priv: "candlepin.*:ALL,GRANT"
     state: present
+  when:
+    - ansible_distribution in ["CentOS", "RedHat"] and ansible_distribution_major_version <= "8"
+      or ansible_distribution == "Fedora" and ansible_distribution_major_version <= "34"
+  tags:
+    - candlepin
+    - mariadb
+
+- name: "Create the 'candlepin' MariaDB user"
+  become: true
+  ansible.builtin.command: "mysql --user root --execute=\"CREATE USER IF NOT EXISTS 'candlepin'@'localhost'; GRANT ALL PRIVILEGES on candlepin.* TO 'candlepin'@'localhost' WITH GRANT OPTION;\""
+  changed_when: false
+  when:
+    - ansible_distribution in ["CentOS", "RedHat"] and ansible_distribution_major_version == "9"
+      or ansible_distribution == "Fedora" and ansible_distribution_major_version >= "35"
   tags:
     - candlepin
     - mariadb
