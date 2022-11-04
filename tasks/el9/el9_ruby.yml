@@ -3,7 +3,7 @@
   ansible.builtin.include_role:
     name: rvm1-ansible
   vars:
-    rvm1_rubies: []
+    rvm1_rubies:
     rvm1_user: "{{ candlepin_user | default('candlepin') }}"
     rvm1_bundler_install: false
   tags:
