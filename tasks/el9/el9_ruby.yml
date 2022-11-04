@@ -1,7 +1,7 @@
 ---
 - name: "Install rvm/ruby"
   ansible.builtin.include_role:
-    name: rvm1-ansible
+    name: rvm.ruby
   vars:
     rvm1_rubies:
     rvm1_user: "{{ candlepin_user | default('candlepin') }}"
