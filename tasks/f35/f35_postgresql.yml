@@ -18,7 +18,6 @@
   ansible.builtin.command:
     cmd: pg_ctl initdb -D /var/lib/pgsql/data
     creates: "/var/lib/pgsql/data/PG_VERSION"
-    warn: false
   tags:
     - postgresql
     - candlepin

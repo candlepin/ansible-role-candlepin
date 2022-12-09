@@ -28,7 +28,6 @@
       ansible.builtin.command:
         cmd: "env QUIET=1 {{ cp_deploy_script }} {{ cp_deploy_args }}"
         chdir: "{{ candlepin_home }}"
-        warn: false
       changed_when: false
       when:
         - candlepin_home_dir.stat.isdir

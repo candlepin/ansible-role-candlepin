@@ -12,7 +12,6 @@
   become: true
   ansible.builtin.command:
     cmd: dnf update -y --allowerasing
-    warn: false
   changed_when: false
   tags:
     - system
@@ -23,7 +22,6 @@
   become: true
   ansible.builtin.command:
     cmd: dnf module enable -y pki-core pki-deps
-    warn: false
   changed_when: false
   tags:
     - base_deps
